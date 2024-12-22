@@ -1,72 +1,110 @@
 <template>
   <v-container>
     <div class="mt-10">
-      <h1 class="text-center text-primary">Generated Invoices POC</h1>
+      <h2 class="text-center text-black">Generated Invoices POC</h2>
 
       <v-row class="d-flex align-center mt-4">
         <v-col class="d-flex flex-column mt-5">
-          <h3 class="text-primary">Total Invoices:</h3>
-          <p class="text-black font-weight-bold">{{ totalInvoices }}</p>
+          <v-card
+            class="pa-7 radius-10 card"
+            color="step-segment"
+            min-height="110px"
+          >
+            <h3 class="text-black">Total Invoices:</h3>
+            <p class="text-black font-weight-bold">{{ totalInvoices }}</p>
+          </v-card>
         </v-col>
         <v-col class="d-flex flex-column mt-5">
-          <h3 class="text-primary">Flag Invoices:</h3>
-          <p class="text-warning font-weight-bold">{{ failureCount }}</p>
+          <v-card
+            class="pa-7 radius-10 card"
+            color="step-segment"
+            min-height="110px"
+          >
+            <h3 class="text-black">Flag Invoices:</h3>
+            <p class="text-warning font-weight-bold">{{ failureCount }}</p>
+          </v-card>
         </v-col>
         <v-col class="d-flex flex-column mt-5">
-          <h3 class="text-primary">Generated Invoices:</h3>
-          <p class="text-success font-weight-bold">{{ successCount }}</p>
+          <v-card
+            class="pa-7 radius-10 card"
+            color="step-segment"
+            min-height="110px"
+          >
+            <h3 class="text-black">Generated Invoices:</h3>
+            <p class="text-black font-weight-bold">{{ successCount }}</p>
+          </v-card>
         </v-col>
-        <v-col class="d-flex flex-column mt-5">
-          <v-file-input
-            v-model="file"
-            @update:model-value="uploadFile"
-            density="compact"
-            label="Upload File"
-            :loading="isUploadFile"
-            variant="outlined"
-          ></v-file-input>
+        <v-col cols="12">
+          <v-card
+            class="pa-6 d-flex align-center justify-center radius-10 card cursor-pointer"
+            color="step-segment"
+            min-height="100px"
+            @click="triggerFileInput"
+          >
+            <!-- Hidden v-file-input component -->
+            <v-file-input
+              v-model="file"
+              @update:model-value="uploadFile"
+              density="compact"
+              accept="text/plain, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              :loading="isUploadFile"
+              variant="outlined"
+              label="Upload File"
+              class="d-none"
+            ></v-file-input>
+
+            <!-- Drag and Drop area -->
+            <div
+              class="dropzone"
+              @dragover.prevent
+              @drop="onDrop"
+              @dragenter.prevent
+              @dragleave.prevent
+            >
+              <v-icon large>mdi-cloud-upload</v-icon>
+              <span class="ml-2"
+                >Drag and drop your file here, or click to browse</span
+              >
+            </div>
+          </v-card>
         </v-col>
       </v-row>
       <div class="mt-6">
         <v-row align="center">
           <v-col cols="5">
-            <label class="font-weight-bold text-info"> Search Here:</label>
+            <label class="font-weight-bold text-black">Search Here:</label>
             <v-text-field
               v-model="textField"
               class="mt-2"
               placeholder="Search by Customer Name, Invoices or Customer ID"
               variant="outlined"
               color="primary"
-            >
-            </v-text-field>
+            ></v-text-field>
           </v-col>
           <v-col cols="7">
             <div class="d-flex align-center ga-3 justify-end flex-wrap">
               <v-btn
-                variant="tonal"
                 color="primary"
                 width="13rem"
-                class="text-capitalize"
+                class="text-capitalize card"
                 @click="updateTextField"
               >
                 Search
               </v-btn>
               <v-btn
-                variant="tonal"
                 color="danger"
                 width="13rem"
-                class="text-capitalize"
+                class="text-capitalize card"
                 :loading="isReset"
                 @click="deleteAllData"
               >
                 Reset
               </v-btn>
               <v-btn
-                variant="tonal"
-                color="secondary"
+                color="green"
                 width="13rem"
                 :loading="isSendToBill"
-                class="text-capitalize"
+                class="text-capitalize card"
                 @click="generateInvoice"
               >
                 Send to Bill.com
@@ -97,6 +135,7 @@
     </div>
   </v-container>
 </template>
+
 <script setup>
 import { onMounted, ref } from "vue";
 import {
@@ -110,27 +149,25 @@ const file = ref(null);
 const textField = ref(null);
 const dataItems = ref({
   customers: [],
-  pagination: {
-    currentPage: 1,
-    totalPages: 1,
-    totalCustomers: 0,
-    limit: 50,
-  },
+  pagination: { currentPage: 1, totalPages: 1, totalCustomers: 0, limit: 50 },
 });
 const isReset = ref(false);
 const isSendToBill = ref(false);
 
 onMounted(async () => {
-  const response = await getItems({ page: 1, limit: 100 });
+  const response = await getItems({ page: 1, limit: 500 });
   if (response) {
     dataItems.value.customers = response.customers;
     dataItems.value.pagination = response.pagination;
   }
 });
 
+const triggerFileInput = () => {
+  document.querySelector('input[type="file"]').click();
+};
+
 const currentPage = ref(1);
 const limit = ref(50);
-
 const selected = ref([]);
 const headers = [
   { title: "Customer Id", key: "customerId" },
@@ -141,11 +178,10 @@ const headers = [
 ];
 
 const onPageChange = async (page) => {
-  const response = await getItems({ page, limit: 100 });
-
+  const response = await getItems({ page, limit: 500 });
   if (response) {
-    dataItems.value.customers = response?.customers ?? [];
-    dataItems.value.pagination = response?.pagination ?? {
+    dataItems.value.customers = response.customers ?? [];
+    dataItems.value.pagination = response.pagination ?? {
       currentPage: 1,
       totalPages: 1,
       totalCustomers: 0,
@@ -153,10 +189,11 @@ const onPageChange = async (page) => {
     };
   }
 };
+
 const isUploadFile = ref(false);
 
 const updateTextField = async () => {
-  if (textField.value === null || textField.value === "") {
+  if (!textField.value) {
     alert("Please enter search text");
     return;
   }
@@ -165,10 +202,9 @@ const updateTextField = async () => {
     limit: 50,
     qstr: textField.value,
   });
-
   if (response) {
-    dataItems.value.customers = response?.customers ?? [];
-    dataItems.value.pagination = response?.pagination ?? {
+    dataItems.value.customers = response.customers ?? [];
+    dataItems.value.pagination = response.pagination ?? {
       currentPage: 1,
       totalPages: 1,
       totalCustomers: 0,
@@ -176,8 +212,8 @@ const updateTextField = async () => {
     };
   }
 };
-const totalInvoices = ref(0);
 
+const totalInvoices = ref(0);
 const uploadFile = async (e) => {
   isUploadFile.value = true;
   if (e) {
@@ -194,8 +230,8 @@ const successCount = ref(0);
 const failureCount = ref(0);
 
 const generateInvoice = async () => {
-  if (selected.value.length === 0) {
-    alert("Please select atleast one invoice to generate");
+  if (!selected.value.length) {
+    alert("Please select at least one invoice to generate");
     return;
   }
   isSendToBill.value = true;
@@ -220,10 +256,10 @@ const deleteAllData = async () => {
 };
 
 const getItemsData = async () => {
-  const response = await getItems({ page: 1, limit: 100 });
+  const response = await getItems({ page: 1, limit: 500 });
   if (response) {
-    dataItems.value.customers = response?.customers ?? [];
-    dataItems.value.pagination = response?.pagination ?? {
+    dataItems.value.customers = response.customers ?? [];
+    dataItems.value.pagination = response.pagination ?? {
       currentPage: 1,
       totalPages: 1,
       totalCustomers: 0,
@@ -231,4 +267,18 @@ const getItemsData = async () => {
     };
   }
 };
+
+const onDrop = (event) => {
+  const droppedFile = event.dataTransfer.files[0];
+  if (droppedFile) {
+    file.value = droppedFile;
+    uploadFile(droppedFile);
+  }
+};
 </script>
+
+<style lang="scss">
+.card {
+  border-radius: 10px;
+}
+</style>
