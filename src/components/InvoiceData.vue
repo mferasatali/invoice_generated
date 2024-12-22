@@ -79,7 +79,7 @@
     <div class="mt-3">
       <v-data-table
         v-model="selected"
-        :items="dataItems.customers"
+        :items="dataItems.value.customers"
         :headers="headers"
         hide-default-footer
         disable-pagination
@@ -123,8 +123,8 @@ const isSendToBill = ref(false);
 onMounted(async () => {
   const response = await getItems({ page: 1, limit: 50 });
   if (response) {
-    dataItems.customers = response.customers;
-    dataItems.pagination = response.pagination;
+    dataItems.value.customers = response.customers;
+    dataItems.value.pagination = response.pagination;
   }
 });
 
@@ -157,8 +157,8 @@ const updateTextField = async () => {
   });
 
   if (response) {
-    dataItems.customers = response.customers;
-    dataItems.pagination = response.pagination;
+    dataItems.value.customers = response.customers;
+    dataItems.value.pagination = response.pagination;
   }
 };
 const totalInvoices = ref(0);
@@ -206,8 +206,8 @@ const deleteAllData = async () => {
 const getItemsData = async () => {
   const response = await getItems({ page: 1, limit: 50 });
   if (response) {
-    dataItems.customers = response.customers;
-    dataItems.pagination = response.pagination;
+    dataItems.value.customers = response.customers;
+    dataItems.value.pagination = response.pagination;
   }
 };
 </script>
