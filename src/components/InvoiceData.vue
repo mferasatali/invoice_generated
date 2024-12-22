@@ -11,7 +11,7 @@
             min-height="110px"
           >
             <h3 class="text-black">Total Invoices:</h3>
-            <p class="text-black font-weight-bold">{{ totalInvoices }}</p>
+            <p class="text-primary font-weight-bold">{{ totalInvoices }}</p>
           </v-card>
         </v-col>
         <v-col class="d-flex flex-column mt-5">
@@ -21,7 +21,7 @@
             min-height="110px"
           >
             <h3 class="text-black">Flag Invoices:</h3>
-            <p class="text-warning font-weight-bold">{{ failureCount }}</p>
+            <p class="text-red font-weight-bold">{{ failureCount }}</p>
           </v-card>
         </v-col>
         <v-col class="d-flex flex-column mt-5">
@@ -31,7 +31,7 @@
             min-height="110px"
           >
             <h3 class="text-black">Generated Invoices:</h3>
-            <p class="text-black font-weight-bold">{{ successCount }}</p>
+            <p class="text-green font-weight-bold">{{ successCount }}</p>
           </v-card>
         </v-col>
         <v-col cols="12">
@@ -167,14 +167,17 @@ const triggerFileInput = () => {
 };
 
 const currentPage = ref(1);
-const limit = ref(50);
 const selected = ref([]);
 const headers = [
   { title: "Customer Id", key: "customerId" },
   { title: "Customer Name", key: "customerName" },
   { title: "Invoice Number", key: "invoiceNumber" },
-  { title: "Invoice Date", key: "invoiceDate" },
-  { title: "Amount", key: "total" },
+  { title: "IC", key: "IC" },
+  { title: "Type", key: "type" },
+  { title: "Apply To", key: "applyTo" },
+  { title: "Transaction Amount", key: "trxAmt" },
+  { title: "Transaction Tax", key: "trxTax" },
+  { title: "Total", key: "total" },
 ];
 
 const onPageChange = async (page) => {
@@ -279,6 +282,6 @@ const onDrop = (event) => {
 
 <style lang="scss">
 .card {
-  border-radius: 10px;
+  border-radius: 12px !important;
 }
 </style>
