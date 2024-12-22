@@ -115,10 +115,10 @@
       </div>
     </div>
     <div class="mt-3">
-      {{ customersData.length }}asdaas
       <v-data-table
         v-model="selected"
         :items="customersData"
+        items-per-page="500"
         :headers="headers"
         hide-default-footer
         disable-pagination
