@@ -112,8 +112,8 @@ const dataItems = ref({
   customers: [],
   pagination: {
     currentPage: 1,
-    totalPages: 2,
-    totalCustomers: 58,
+    totalPages: 1,
+    totalCustomers: 0,
     limit: 50,
   },
 });
@@ -141,7 +141,17 @@ const headers = [
 ];
 
 const onPageChange = async (page) => {
-  dataItems.value = await getItems({ page, limit: 50 });
+  const response = await getItems({ page, limit: 50 });
+
+  if (response) {
+    dataItems.value.customers = response?.customers ?? [];
+    dataItems.value.pagination = response?.pagination ?? {
+      currentPage: 1,
+      totalPages: 1,
+      totalCustomers: 0,
+      limit: 50,
+    };
+  }
 };
 const isUploadFile = ref(false);
 
@@ -157,8 +167,13 @@ const updateTextField = async () => {
   });
 
   if (response) {
-    dataItems.value.customers = response.customers;
-    dataItems.value.pagination = response.pagination;
+    dataItems.value.customers = response?.customers ?? [];
+    dataItems.value.pagination = response?.pagination ?? {
+      currentPage: 1,
+      totalPages: 1,
+      totalCustomers: 0,
+      limit: 50,
+    };
   }
 };
 const totalInvoices = ref(0);
@@ -174,6 +189,7 @@ const uploadFile = async (e) => {
   }
   isUploadFile.value = false;
 };
+
 const successCount = ref(0);
 const failureCount = ref(0);
 
@@ -206,8 +222,13 @@ const deleteAllData = async () => {
 const getItemsData = async () => {
   const response = await getItems({ page: 1, limit: 50 });
   if (response) {
-    dataItems.value.customers = response.customers;
-    dataItems.value.pagination = response.pagination;
+    dataItems.value.customers = response?.customers ?? [];
+    dataItems.value.pagination = response?.pagination ?? {
+      currentPage: 1,
+      totalPages: 1,
+      totalCustomers: 0,
+      limit: 50,
+    };
   }
 };
 </script>
