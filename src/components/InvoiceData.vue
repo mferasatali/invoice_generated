@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="mt-10">
-      <h2 class="text-center text-black">Generated Invoices POC</h2>
+      <h2 class="text-center text-black">Janiking Invoice Automater</h2>
 
       <v-row class="d-flex align-center mt-4">
         <v-col class="d-flex flex-column mt-5">
