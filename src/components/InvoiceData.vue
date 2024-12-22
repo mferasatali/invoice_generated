@@ -117,27 +117,30 @@
     <div class="mt-3">
       <v-data-table
         v-model="selected"
-        :items="dataItems.customers"
+        :items="customersData"
         :headers="headers"
         hide-default-footer
         disable-pagination
         item-value="customerId"
         show-select
       ></v-data-table>
-      <div class="d-flex align-start base-card mt-1 bg-white">
-        <v-pagination
-          v-model:currentPage="currentPage"
-          :length="dataItems.pagination.totalPages"
-          :total-visible="6"
-          @update:modelValue="onPageChange"
-        ></v-pagination>
+      <div class="d-flex justify-center mt-5">
+        <v-btn
+          v-if="!isShowAll && dataItems.customers.length > 10"
+          variant="text"
+          color="primary"
+          @click="isShowAll = true"
+        >
+          <v-icon class="mr-2"> mdi-refresh </v-icon>
+          Show All
+        </v-btn>
       </div>
     </div>
   </v-container>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
   deleteInvoice,
   getItems,
@@ -153,7 +156,7 @@ const dataItems = ref({
 });
 const isReset = ref(false);
 const isSendToBill = ref(false);
-
+const isShowAll = ref(false);
 onMounted(async () => {
   const response = await getItems({ page: 1, limit: 500 });
   if (response) {
@@ -193,6 +196,13 @@ const onPageChange = async (page) => {
   }
 };
 
+const customersData = computed(() => {
+  if (isShowAll.value) {
+    return dataItems.value.customers;
+  } else {
+    return dataItems.value.customers.slice(0, 10);
+  }
+});
 const isUploadFile = ref(false);
 
 const updateTextField = async () => {
