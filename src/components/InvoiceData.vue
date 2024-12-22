@@ -169,6 +169,7 @@ const uploadFile = async (e) => {
     const data = await uploadFileData(e);
     if (data?.totalInvoices) {
       totalInvoices.value = data.totalInvoices;
+      await getItemsData();
     }
   }
   isUploadFile.value = false;
@@ -197,12 +198,16 @@ const deleteAllData = async () => {
     successCount.value = 0;
     failureCount.value = 0;
     selected.value = [];
-    const response = await getItems({ page: 1, limit: 50 });
-    if (response) {
-      dataItems.customers = response.customers;
-      dataItems.pagination = response.pagination;
-    }
+    await getItemsData();
   }
   isReset.value = false;
+};
+
+const getItemsData = async () => {
+  const response = await getItems({ page: 1, limit: 50 });
+  if (response) {
+    dataItems.customers = response.customers;
+    dataItems.pagination = response.pagination;
+  }
 };
 </script>
