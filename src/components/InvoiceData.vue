@@ -115,6 +115,7 @@
       </div>
     </div>
     <div class="mt-3">
+      {{ customersData.length }}asda
       <v-data-table
         v-model="selected"
         :items="customersData"
