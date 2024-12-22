@@ -79,6 +79,9 @@
               placeholder="Search by Customer Name, Invoices or Customer ID"
               variant="outlined"
               color="primary"
+              clear-icon="mdi-close-circle"
+              clearable
+              @click:clear="updateTextField"
             ></v-text-field>
           </v-col>
           <v-col cols="7">
@@ -209,6 +212,7 @@ const isUploadFile = ref(false);
 const updateTextField = async () => {
   if (!textField.value) {
     alert("Please enter search text");
+    getItemsData();
     return;
   }
   const response = await getItems({
